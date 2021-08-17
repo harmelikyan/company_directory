@@ -6,7 +6,7 @@
 
     $countries = array();
     for($i = 0; $i < sizeof($features); $i++) {
-        $feature = $features[i];
+        $feature = $features[$i];
         $country_name = $feature->properties->name;
         $country_iso = $feature->properties->iso_a2;
         $array = [$country_name, $country_iso];
