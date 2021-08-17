@@ -51,7 +51,7 @@ map.on('locationerror', onLocationError);
         var countries = JSON.parse(json);
         var text = "";
         for(country of countries) {
-            option += '<option value="' + country[1] + '">' + country[0] + "</option>";
+            text += '<option value="' + country[1] + '">' + country[0] + "</option>";
         }
         $('#selectCount').html(text);
       }
