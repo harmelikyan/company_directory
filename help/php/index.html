@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <title>Preproject task</title>
+  <meta name="description" content="using geoname.com apis">
+  <meta name="viewport" content="width=device-width initial-scale=1">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/styles.css" type="text/css">
+</head>
+
+<body>
+  <div id="preloader"></div>
+  <!--Table header-->
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">API name</th>
+              <th scope="col">Select Country</th>
+              <th scope="col">API description</th>
+              <th>Button</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <!-- Neighbors -->
+              <th scope="row">Neighbors</th>
+              <td><select id="selCountry">
+                  <option value="GB">Great Britain</option>
+                  <option value="BE">Belgium</option>
+                  <option value="AM">Armenia</option>
+                  <option value="US">USA</option>
+                </select>
+              </td>
+              <td align="center">
+                When country selected and submit is clicked, returns all neighbours for a country or administrative division.
+              </td>
+              <td>
+                <button type="button" class="btn btn-primary" id="button">Submit</button>
+              </td>
+            </tr>
+              <!-- Address -->
+              <tr>
+                <th scope="row">Address</th>
+                <td>Input lat: <input id="selLat" type="number" value="52.358"></td>
+                <td align="center">Input lng: <input id="selLng" type="number" value="4.881">
+                </td>
+                <td>
+                  <button type="button" class="btn btn-primary" id="button2">Submit</button>
+                </td>
+              </tr>
+            <!-- Find nearby points of interest -->
+            <tr>
+              <th scope="row">Find nearby points of interest</th>
+              <td>Input lat: <input id="selLat" type="number" value="37.45189"></td>
+              <td align="center">Input lng: <input id="selLng" type="number" value="-122.18">
+              </td>
+              <td>
+                <button type="button" class="btn btn-primary" id="button3">Submit</button>
+              </td>
+            </tr>
+          </tbody>
+      </div>
+    </div>
+  </div>
+  </table>
+  <!-- Result for Neighbours-->
+  <div class="col-12 container">
+    <table class="table table-bordered">
+      <tr>
+        <td>
+          Country:
+        </td>
+        <td id="txtPostalCode"></td>
+      </tr>
+      <tr>
+        <td>
+          GeonameId:
+        </td>
+        <td id="txtCountry"></td>
+      </tr>
+      <tr>
+        <td>
+          Population:
+        </td>
+        <td id="popul"></td>
+      </tr>
+      <tr>
+        <td>
+          Country Code:
+        </td>
+
+        <td id="CountryCode"></td>
+      </tr>
+      <tr>
+        <td>
+          Country:
+        </td>
+        <td id="country1">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          GeonameId:
+        </td>
+        <td id="geo">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Population:
+        </td>
+        <td id="pop"></td>
+      </tr>
+      <tr>
+        <td>
+          Country Code:
+        </td>
+
+        <td id="countCode"></td>
+      </tr>
+
+      <tr>
+        <td>
+          Country:
+        </td>
+        <td id="country2"></td>
+      </tr>
+
+      <tr>
+        <td>
+          GeonameId:
+        </td>
+        <td id="txtCountry2"></td>
+      </tr>
+      <tr>
+        <td>
+          Population:
+        </td>
+        <td id="popul2"></td>
+      </tr>
+      <tr>
+        <td>
+          Country Code:
+        </td>
+
+        <td id="CountryCode2"></td>
+      </tr>
+      <tr>
+        <td>
+          Country:
+        </td>
+        <td id="country3">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          GeonameId:
+        </td>
+        <td id="geo3">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Population:
+        </td>
+        <td id="pop3"></td>
+      </tr>
+      <tr>
+        <td>
+          Country Code:
+        </td>
+        <td id="countCode3"></td>
+      </tr>
+      <tr>
+        <td>
+          Country:
+        </td>
+        <td id="country4">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          GeonameId:
+        </td>
+        <td id="geo4">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Population:
+        </td>
+        <td id="pop4"></td>
+      </tr>
+      <tr>
+        <td>
+          Country Code:
+        </td>
+        <td id="countCode4"></td>
+      </tr>
+    </table>
+  </div>
+  <!-- Result for address -->
+  <div class="col-12 container">
+    <table class="table table-bordered">
+      <tr>
+        <td>
+          houseNumber:
+        </td>
+        <td id="houseNum"></td>
+      </tr>
+      <tr>
+        <td>
+          locality:
+        </td>
+        <td id="localty"></td>
+      </tr>
+      <tr>
+        <td>
+          adminName2:
+        </td>
+        <td id="adminName2"></td>
+      </tr>
+      <tr>
+        <td>
+          street:
+        </td>
+
+        <td id="street"></td>
+      </tr>
+      <tr>
+        <td>
+          postalcode:
+        </td>
+        <td id="postal">
+        </td>
+      </tr>
+    </table>
+  </div>
+  <!--Result for Find nearby points of interest---->
+  <div class="col-12 container">
+    <table class="table table-bordered">
+      <tr>
+        <td>
+          lat:
+        </td>
+        <td id="latt"></td>
+      </tr>
+      <tr>
+        <td>
+          distance:
+        </td>
+        <td id="distance"></td>
+      </tr>
+      <tr>
+        <td>
+          typeClass:
+        </td>
+        <td id="typeClass"></td>
+      </tr>
+      <tr>
+        <td>
+          lng:
+        </td>
+        <td id="lngg"></td>
+      </tr>
+    </table>
+  </div>
+
+
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <!-- <script src="javascript/addressJquery.js"></script> -->
+  <script src="javascript/neighbourJquery.js"></script>
+  <!-- <script src="javascript/oceanJquery.js"></script> -->
+</body>
+
+</html>
