@@ -1,3 +1,4 @@
+//init maps
 const map = L.map('issMap').fitWorld();
 map.locate({setView: true, maxZoom: 16});
 
@@ -40,7 +41,7 @@ map.on('locationerror', onLocationError);
 
 
 
-
+//getting country names
   function get_country() {
     $.ajax({
       url: 'getCountriesCode.php',
