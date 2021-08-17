@@ -13,10 +13,6 @@
         array_push($countries, $array);
     }
 
-    usort($countries, function($a, $b) {
-        return strcasecmp($a[0], $b[0]);
-    });
-
     print_r(json_encode($countries));
 
 
