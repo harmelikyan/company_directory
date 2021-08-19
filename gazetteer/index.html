@@ -1,1 +1,72 @@
+<!DOCTYPE html>
 
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin=""/>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+              integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+              crossorigin=""></script>
+    </head>
+    <body>
+        <!--CountryName select-->
+        <!-- <div class="container">
+            <select name="countries" id="countries">Select Country</select>
+        </div> -->
+        <!--Map-->
+        <div id="issMap"></div>
+        <!--Country Card-->
+        <div id="countryCard">
+            <table class="table table-bordered fixed-bottom">
+                <thead class="thead-dark">
+                    <tr>
+                    <th scope="col">Country Name:</th>
+                    <th><div class="container">
+                        <select name="countries" id="countries" style="width: 200px;">
+                        <option value="">Select Country</option>
+                        </select>
+                    </div></th>
+                    <!--concatenate the name from the API to the string above-->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td scope="row">Flag:</td>
+                        <td style="width: 20px">Capital:</td>
+                        <td>Population:</td>
+                        <td>Currency:</td>
+                        <td>Language</td>
+                        <td>Time Zone</td>
+                        <td>Region</td>
+                    </tr>
+                    <tr>
+                        
+                        <td scope="row">Flag:<img src="" style="height: 50px" id="country_flag" /></td>
+                        <td id="country_capital">Capital Name</td>
+                        <td id="country_population">Population Number</td>
+                        <td id="country_flag">Currency:</td>
+                        <td id="country_currency">Language</td>
+                        <td>Time Zone</td>
+                        <td>Region</td>  
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    
+        
+        <script src="javascript/app.js"></script>
+   
+
+    </body>
+</html>
