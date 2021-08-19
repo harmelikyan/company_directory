@@ -4,16 +4,19 @@
     $json = json_decode($url);
     $features = $json->features;
 
-    $country_borders = array();
-    for($i = 0; $i < sizeof($features); $i++) {
+    $countries = [];
+    for($i = 0; $i < count($features); $i++) {
         $feature = $features[$i];
-        $country_border = $feature->properties->geometry;
-        array_push($country_borders, $array);
+        $country_name = $feature->properties->name;
+        $country_iso = $feature->properties->iso_a2;
+        $array = [$country_name, $country_iso];
+        array_push($countries, $features[$i]);
     }
 
 
 
-    print_r(json_encode($country_borders));
+    print_r(json_encode($countries));
 
 
 ?>
+
