@@ -1,16 +1,19 @@
 <?php
- 
+
     $url = file_get_contents("countryBorders.geo.json");
     $json = json_decode($url);
     $features = $json->features;
- 
-    $countries = [];
-    for($i = 0; $i < count($features); $i++) {
-        
-        array_push($countries, $features[$i]);
+
+    $country_borders = array();
+    for($i = 0; $i < sizeof($features); $i++) {
+        $feature = $features[$i];
+        $country_border = $feature->properties->geometry;
+        array_push($country_borders, $array);
     }
- 
-    echo json_encode($countries);
- 
+
+
+
+    print_r(json_encode($country_borders));
+
 
 ?>
