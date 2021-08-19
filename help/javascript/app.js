@@ -44,16 +44,27 @@ map.on('locationerror', onLocationError);
 //getting country names
   function get_country() {
     $.ajax({
-      url: 'getCountriesCode.php',
+      url: 'php/getCountriesCode.php',
       type: 'GET',
+      dataType: 'json',
       
       success: function(json) {
-        var countries = JSON.parse(json);
-        var text = "";
-        for(country of countries) {
-            text += '<option value="' + country[1] + '">' + country[0] + "</option>";
+        // var countries = JSON.parse(json);
+        var countries = JSON.stringify(json);
+    //    console.log(countries)
+
+        var output = "";
+        for(var country of countries) {
+            output +=
+            '<option value="' + country[1] + '">' + country[0] + "</option>";
         }
-        $('#selectCount').html(text);
-      }
+        $('#countries').html(output);
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+				// your error code
+			}
+            
     })
+    
   }
+  get_country();
