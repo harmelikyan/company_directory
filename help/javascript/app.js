@@ -1,3 +1,6 @@
+var country_code_global;
+var lat;
+var lng;
 const map = L.map('issMap').fitWorld();
 map.locate({setView: true, maxZoom: 16});
 
@@ -70,15 +73,17 @@ function getCountry() {
       type: 'GET',
       dataType: 'json', 
       data: {
-          countryCode: countryCode
+          countryCode: $('#countries').val(),
+
       },
       
-      success: function(result) {
-      //  console.log (JSON.stringify(json))
+      success: function(json) {
+        console.log(JSON.stringify(json))
         countryBoundary.clearLayers();
-        countryBoundary.addData(result).setStyle(countryStyle());
+        countryBoundary.addData(json).setStyle(countryStyle());
         const bounds = countryBoundary.getBounds();
         map.fitBounds(bounds);
+
  },
 
       error: function(jqXHR, textStatus, errorThrown) {
@@ -89,7 +94,10 @@ function getCountry() {
     })
     
   }
-  getCountryBorder();
+
+
+
+
 
 
   
@@ -104,13 +112,42 @@ function countryStyle() {
 }
 
 
+function locateCountry(countryCode) {
+  if (countryCode == "") return;
+  country_name = $("#country option:selected").text();
+  country_code_global = countryCode;
+  getCountryBorder(countryCode);
+  getCountryInfo(countryCode);
+}
 
-var latlang = [[[23.75975, -77.53466],[23.71, -77.78],[24.28615, -78.03405],[24.57564, -78.40848],[25.2103, -78.19087],[25.17, -77.89],[24.34, -77.54],[23.75975, -77.53466]]];
-// Creating poly line options
-var polyLineOptions = {color:'red'};
-// Creating multi poly-lines
-var polyline = L.polyline(latlang , polyLineOptions);
-// Adding multi poly-line to map
-map.fitBounds(polyline.getBounds());
-polyline.addTo(map);
+//get country info getting error TypeError: undefined is not an object (evaluating 'info.latlng[0]')
+function getCountryInfo(countryCode) {
+  //animation space
+  
+  $.ajax({
+    url: "php/getCountryInfo.php",
+    type: "GET",
+    datatype: 'json',
+    data: {
+       countryCode: countryCode,
+    },
+    success: function(result) {
+      let info = JSON.parse(result);
+      console.log(info);
+      lat = info.latlng[0];
+      lng = info.latlng[1];
+      $("#country_capital").html(info.capital);
+      $("#country_population").html(info.population);
+      $("#country_flag").attr("src", info.flag);
+      $("#country_currency").html(info.currencies[0]["name"]);
+      $("#region").html(info.region);
+      $("#timeZone").html(info.timezones);
+       $("#timeZone").html(info.languages[2]["name"]);
 
+    }, 
+    error: function(jqXHR, textStatus, errorThrown) {
+      // your error code
+      console.log(jqXHR);
+    }
+  })
+}
