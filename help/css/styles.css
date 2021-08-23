@@ -1,0 +1,82 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+html, body, #issMap {
+    height: 100%;
+    width: 100vw;
+}
+
+
+.table {
+    background-color: gray;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background-color: rgb(150, 141, 141);
+    color: white;
+    font-weight: bold;
+}
+td, th {
+    padding: 6px;
+    border: 1px  solid #ccc;
+    text-align: left;
+}
+
+#weather-table {
+    width: 30%;
+    margin-left: auto;
+}
+
+
+.countName {
+   margin-bottom: 10px
+}
+
+
+.view {
+    height: 70vh;
+    overflow-y: auto;
+  }
+
+
+  .weatherContainer {
+      height: 200px;
+      width: 300px;
+
+  } 
+
+/*
+ @media only screen and(max-width: 800px) {
+     #weather-table {
+    width: 50%;
+    }
+
+}
+
+
+  @media only screen and (max-width: 800px) {
+    tr {
+    
+      background-color: red;
+      width: fit-content;
+        height: 100px;
+      float: left;
+     
+
+    }
+  } 
+
+#weather-table {
+    height: 50px;
+    width: 400px;
+    margin: auto;
+}
+ 
+
+/* #weather-table {
+    position: relative;
+    left: 200px;
+} */
