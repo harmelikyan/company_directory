@@ -32,8 +32,6 @@ tiles.addTo(map)
 
  getCountry();
  getUserLocation();
- getCluster()
-
 
 });
 
@@ -267,8 +265,7 @@ function getCluster(south, north, west, east) {
       south: south,
       north: north,
       west: west,
-      east: east,
-      username: "harmelikyan",
+      east: east
 
     },
     success: function(response) {
@@ -288,6 +285,10 @@ function getCluster(south, north, west, east) {
       var markers = L.markerClusterGroup();
       markers.addLayer(L.marker(getNearbyCities(east, west, north, south)));
         map.addLayer(markers);
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      // your error code
+      console.log(jqXHR);
     }
   })
 }
