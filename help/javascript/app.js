@@ -162,6 +162,7 @@ function getUserLocation() {
         const south = bounds.getSouth();
         ;
         getNearbyCities(east, west, north, south);
+        getCluster(south, north, west, east);
  },
 
       error: function(jqXHR, textStatus, errorThrown) {
@@ -258,12 +259,17 @@ function getCountryInfo(countryCode) {
   });
 }
 
-function getCluster() {
+function getCluster(south, north, west, east) {
   $.ajax({
     url: "php/getCountryInfoGeonames.php",
     type: "GET",
     data: {
-      country_code: countryCode
+      south: south,
+      north: north,
+      west: west,
+      east: east,
+      username: "harmelikyan",
+
     },
     success: function(response) {
       let info = JSON.parse(response);
@@ -281,8 +287,7 @@ function getCluster() {
 
       var markers = L.markerClusterGroup();
       markers.addLayer(L.marker(getNearbyCities(east, west, north, south)));
-      map.addLayer(markers);
-
+        map.addLayer(markers);
     }
   })
 }
@@ -311,7 +316,6 @@ function getWeatherData() {
         $("#second-row").append("<td>" + parseInt(d["temp"]["max"]) + "°</td>");
         $("#third-row").append("<td>" + parseInt(d["temp"]["min"]) + "°</td>");
       }
-      $("#weatherModal").modal();
     },
   });
 }
