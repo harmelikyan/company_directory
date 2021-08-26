@@ -4,16 +4,11 @@
 	ini_set('display_errors', 'On');
 	error_reporting(E_ALL);
 
-   $executionStartTime = microtime(true);
-    $east = $_GET['east'];
-    $west = $_GET['west'];
-    $north = $_GET['north'];
-    $south = $_GET['south'];
-    $username = $_GET['username'];
+	$executionStartTime = microtime(true);
 
-
-	$url= file_get_contents('http://api.geonames.org/countryInfoJSON?formatted=true&north=$north&south=$south&east=$east&west=$west&username=$username&style=full');
-
+$url = 'http://api.geonames.org/countryInfoJSON?formatted=true&north=' . $_GET['north'] . '&south=' . $_GET['south'] . '&east=' . $_GET['east']
+    . '&west=' . $_GET['west'] . '&username= harmelikyan&style=full';
+$_GET['south'];
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
