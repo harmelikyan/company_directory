@@ -13,6 +13,7 @@ var lng;
 var countryBoundary;
 var map;
 var citiesMarker;
+var wikiMarker;
 
 $(document).ready(function () {
 map = L.map("issMap", {
@@ -29,6 +30,9 @@ tiles.addTo(map)
 
  citiesMarker = L.markerClusterGroup();
  map.addLayer(citiesMarker);
+
+wikiMarker = L.markerClusterGroup();
+map.addLayer(wikiMarker);
 
  getCountry();
  getUserLocation();
@@ -160,6 +164,7 @@ function getUserLocation() {
         const south = bounds.getSouth();
         ;
         getNearbyCities(east, west, north, south);
+        getNearbyWikis(east, west, north, south);
 
  },
 
@@ -232,6 +237,49 @@ function getNearbyCities(east, west, north, south) {
   });
 }
 
+//get nearby wikipedias
+function getNearbyWikis(east, west, north, south) {
+  wikiMarker.clearLayers();
+  $.ajax({
+    url: "php/getWikipedia.php",
+    type: "GET",
+    data: {
+      east: east,
+      west: west,
+      north: north,
+      south: south,
+      username: "harmelikyan",
+    },
+    success: function (json) {
+      json = JSON.parse(json);
+      console.log(json);
+      const data = json.geonames;
+      const wiki_icon = L.ExtraMarkers.icon({
+        icon: 'fa-coffee',
+        markerColor: 'blue',
+        shape: 'circle',
+        prefix: 'fa'
+      });
+      for (let i = 0; i < data.length; i++) {
+        const marker = L.marker([data[i].lat, data[i].lng], {
+          icon: wiki_icon,
+        }).bindPopup(
+          "<img src='" +
+          data[i].thumbnailImg +
+          "' width='50px' height='50px' alt='" +
+          data[i].title +
+          "'><br><b>" +
+          data[i].title +
+          "</b><br><a href='https://" +
+          data[i].wikipediaUrl +
+          "' target='_blank'>Wikipedia Link</a>"
+        );
+        wikiMarker.addLayer(marker);
+      }
+    },
+  });
+}
+
 
 //get country info
 function getCountryInfo(countryCode) {
@@ -253,6 +301,10 @@ function getCountryInfo(countryCode) {
             $("#country_currency").html(info.currencies[0]["name"]);
             $("#region").html(info.region);
             $("#timeZone").html(info.timezones);
+            $("#countryWikipedia").attr(
+              "href",
+              "https://en.wikipedia.org/wiki/" + info.name
+            );
     },
   });
 }
