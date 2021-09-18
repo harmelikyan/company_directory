@@ -6,7 +6,7 @@ $(window).on('load', function() {
     });
   }
 });
-var countryName = "";
+var countryName;
 var countryCodeGlobal = "";
 var lat;
 var lng;
@@ -14,8 +14,14 @@ var countryBoundary;
 var map;
 var citiesMarker;
 var wikiMarker;
+var country_code
 
 $(document).ready(function () {
+  $("#countries").change(function(){
+
+    locateCountry($(this).val());
+  
+  });
 map = L.map("issMap", {
   attributionControl: false,
 }).setView([0, 0], 1.5);
@@ -125,7 +131,7 @@ function getUserLocation() {
           success: function (json) {
             console.log("json: ", json);
             json = JSON.parse(json); 
-            const country_code = json.countryCode;
+             country_code = json.countryCode;
             $("#countries").val(country_code.toUpperCase()).change();
           },
           error: function(jqXHR, textStatus, errorThrown) {
@@ -255,15 +261,20 @@ function getNearbyWikis(east, west, north, south) {
       console.log(json);
       const data = json.geonames;
       const wiki_icon = L.ExtraMarkers.icon({
-        icon: 'fa-wikipedia-w',
+        icon: 'fa-info',
         markerColor: 'blue',
         shape: 'circle',
-        prefix: 'fa'
+        prefix: 'fas'
       });
       for (let i = 0; i < data.length; i++) {
         const marker = L.marker([data[i].lat, data[i].lng], {
           icon: wiki_icon,
         }).bindPopup(
+          "<img src='" +
+          data[i].thumbnailImg +
+          "' width='100px' height='100px' alt='" +
+          data[i].title +
+          "'><br><b>" +
           data[i].title +
           "</b><br><a href='https://" +
           data[i].wikipediaUrl +
@@ -278,7 +289,6 @@ function getNearbyWikis(east, west, north, south) {
 
 //get country info
 function getCountryInfo(countryCode) {
-
   $.ajax({
     url: "php/getCountryInfo.php",
     type: "GET",
@@ -290,6 +300,7 @@ function getCountryInfo(countryCode) {
       console.log(info);
       lat = info.latlng[0];
       lng = info.latlng[1];
+
             $("#country_capital").html(info.capital);
             $("#country_population").html(parseInt(info.population).toLocaleString("en"));
             $("#country_flag").attr("src", info.flag);
@@ -308,7 +319,8 @@ function getCountryInfo(countryCode) {
     
 
 //Weather data
-function getWeatherData() {
+
+ $("#weather").click(function getWeatherData() {
   $.ajax({
     url: "php/getWeather.php",
     type: "GET",
@@ -333,7 +345,8 @@ function getWeatherData() {
       }
     },
   });
-}
+})
+
 function getNews() {
   $("#news").html("");
   $.ajax({
@@ -342,14 +355,17 @@ function getNews() {
     datatype: 'json',
     data: {
       lat: lat,
-      lng: lng
+      lng: lng,
+      countryCodeGlobal: countryCodeGlobal
     },
-      success: function (json) {
-       json = JSON.parse(json);
+    
+      success: function (json) {        
+      json = JSON.parse(json);
       console.log(json);
-      const data = json["articles"];
-      for (let i = 0; i < data.length; i++) {
-        $("#news").append(newsCard(data[i]));
+      const info = json["articles"];
+      for (let i = 0; i < info.length; i++) {
+        $("#news").append(newsCard(info[i]));
+        
       }
     },
     error: function(jqXHR, textStatus, errorThrown) {
@@ -358,9 +374,10 @@ function getNews() {
     } 
   });
 }
+
 function newsCard(data) {
   const card =
-    '<div class="card" style="width: 20rem;"> <img class="card-img-top" src="' +
+    '<div class="card" style= display: inline"> <img class="card-img-top" src="' +
     data["urlToImage"] +
     '" alt="News Image"> <div class="card-body"> <h5 class="card-title">' +
     data["author"] +
@@ -368,7 +385,35 @@ function newsCard(data) {
     data["title"] +
     '</p> <a href="' +
     data["url"] +
-    '" target="_blank" class="btn btn-primary">Details</a> </div> </div>';
+    '" target="_blank" class="btn btn-primary">See More</a> </div> </div>';
   return card;
 }
 
+// $("#covidImg").click(
+  function covidData() {
+  $.ajax({
+    url: "php/covid.php",
+    type: "GET",
+    datatype: "json",
+    data: {
+      countryName: countryName,
+      lat: lat,
+      lng: lng
+    },
+    success: function(response) {
+      let info = JSON.parse(response);
+      console.log(info);
+
+      $("#cases").html(info.cases);
+      $("#todayCases").html(info.todayCases);
+      $("#deaths").html(info.deaths);
+      $("#todayDeaths").html(info.todayDeaths);
+      
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      // your error code
+      console.log(jqXHR);
+    } 
+  })
+}
+// )

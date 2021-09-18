@@ -194,3 +194,8 @@ table.fixed td {
 
 }
 
+
+.style {
+  background-color: red;
+  text-align: center !important;
+}
