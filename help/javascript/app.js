@@ -396,7 +396,7 @@ function newsCard(data) {
     type: "GET",
     datatype: "json",
     data: {
-      countryName: countryName,
+      countryCodeGlobal: countryCodeGlobal,
       lat: lat,
       lng: lng
     },
