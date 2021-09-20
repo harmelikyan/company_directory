@@ -199,6 +199,8 @@ function locateCountry(countryCode) {
   countryCodeGlobal = countryCode;
   getCountryBorder(countryCode);
   getCountryInfo(countryCode);
+  covidData()
+ 
 }
 
 //get nearby cities and put markers
