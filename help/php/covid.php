@@ -1,5 +1,4 @@
 <?php
-
 //error handler
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
@@ -7,8 +6,7 @@ error_reporting(E_ALL);
 //runtime
 $executionStartTime = microtime(true);
 //api path
-$country_code = $_GET['country_code'];
-$url= 'https://disease.sh/v3/covid-19/countries/$country_code?yesterday&strict&query';
+$url= 'https://disease.sh/v3/covid-19/countries/' . REQUEST['countryName'] . '?yesterday&strict&query';
 
 
 //curl initialize
