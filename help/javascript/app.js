@@ -338,7 +338,7 @@ function getNews() {
     type: "GET",
     datatype: 'json',
     data: {
-      countryCodeGlobal: countryCodeGlobal
+      countryCodeGlobal: countryCodeGlobal,
     },
     
       success: function (json) {        
