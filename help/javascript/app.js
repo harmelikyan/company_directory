@@ -377,7 +377,7 @@ function newsCard(data) {
     type: "GET",
     datatype: "json",
     data: {
-      country_code: countryCodeGlobal
+      country_code: country_code
     },
     success: function(result) {
       // let info = JSON.parse(response);
