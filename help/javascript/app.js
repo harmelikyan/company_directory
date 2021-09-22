@@ -380,8 +380,8 @@ function newsCard(data) {
       country_code: country_code
     },
     success: function(result) {
-      // let info = JSON.parse(response);
-      // console.log(info);
+      let info = JSON.parse(response);
+      console.log(info);
 
       $("#cases").html(result['data'].cases);
       $("#todayCases").html(result['data'].todayCases);
