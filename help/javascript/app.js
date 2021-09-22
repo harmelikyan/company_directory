@@ -381,7 +381,7 @@ function newsCard(data) {
       country_code: country_code
     },
     success: function(result) {
-      let info = JSON.parse(response);
+      let info = JSON.stringify(response);
       console.log(info);
 
       $("#cases").html(result['data'].cases);
