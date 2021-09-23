@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 //runtime
 $executionStartTime = microtime(true);
 //api path
-$url= 'https://restcountries.eu/rest/v2/alpha/' . REQUEST['country_code'];
+$url= 'https://restcountries.eu/rest/v2/alpha/' . $_REQUEST['country_code'];
 
 
 
