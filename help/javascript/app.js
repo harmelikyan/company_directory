@@ -159,6 +159,7 @@ function getUserLocation() {
         ;
         getNearbyCities(east, west, north, south);
         getNearbyWikis(east, west, north, south);
+        
 
  },
 
@@ -185,6 +186,7 @@ function locateCountry(countryCode) {
   countryCodeGlobal = countryCode;
   getCountryBorder(countryCode);
   getCountryInfo(countryCode);
+  getNews();
 }
 
 //get nearby cities and put markers
@@ -332,31 +334,53 @@ function getCountryInfo(countryCode) {
 })
 
 function getNews() {
-  $("#news").html("");
-  $.ajax({
-    url: "php/getNews.php",
-    type: "GET",
-    datatype: 'json',
-    data: {
-      countryCodeGlobal: countryCodeGlobal,
-    },
-    
-      success: function (json) {        
-      json = JSON.parse(json);
-      console.log(json);
-      const info = json["articles"];
-      for (let i = 0; i < info.length; i++) {
-        $("#news").append(newsCard(info[i]));
-        
-      }
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-      // your error code
-      console.log(jqXHR);
-    } 
-  });
-}
 
+
+    $("#news").html("");
+  
+    $.ajax({
+  
+      url: "php/getNews.php",
+  
+      type: "GET",
+  
+      datatype: 'json',
+  
+      data: {
+  
+        countryCodeGlobal: countryCodeGlobal,
+  
+      },
+  
+      
+  
+        success: function (json) {        
+  
+        console.log(json);
+  
+        //const info = json["articles"];
+  
+        for (let i = 0; i < json.length; i++) {
+  
+          $("#news").append(newsCard(json[i]));
+  
+          
+  
+        }
+  
+      },
+  
+      error: function(jqXHR, textStatus, errorThrown) {
+  
+        // your error code
+  
+        console.log(jqXHR);
+  
+      } 
+  
+    });
+  
+  }
 function newsCard(data) {
   const card =
     '<div class="card" style= display: inline"> <img class="card-img-top" src="' +
