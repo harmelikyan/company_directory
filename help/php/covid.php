@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 //runtime
 $executionStartTime = microtime(true);
 //api path
-$url= 'https://disease.sh/v3/covid-19/countries/' . REQUEST['countryName'] . '?yesterday&strict&query';
+$url= 'https://disease.sh/v3/covid-19/countries/' . $_REQUEST['countryName'] . '?yesterday&strict&query';
 
 
 //curl initialize
