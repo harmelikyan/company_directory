@@ -321,9 +321,8 @@ function getNews() {
       },
         success: function (json) {        
         console.log(json);
-        //const info = json["articles"];
-        for (let i = 0; i < json.length; i++) {
-          $("#news").append(newsCard(json[i]));  
+        for (let i = 0; i < json.data.length; i++) {
+          $("#news").append(newsCard(json.data[i]));  
         }
       },
   
