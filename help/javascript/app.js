@@ -87,6 +87,7 @@ function getUserLocation() {
           longitude
         } = position.coords;
         const coords = [latitude, longitude];
+        console.log(position);
         $.ajax({
           url: "php/getLatLong.php?lat=" +
             latitude +
@@ -96,10 +97,10 @@ function getUserLocation() {
           type: "GET",
           success: function (json) {
             let info = JSON.stringify(json)
-            console.log("json: ", info);
+            console.log("json: ", json["data"]);
             // 
-             country_code = info.countryCodeGlobal;
-            $("#countries").val(countryCodeGlobal.toUpperCase()).change();
+             country_code = json["data"].countryCode;
+            $("#countries").val(country_code.toUpperCase()).change();
           },
           error: function(jqXHR, textStatus, errorThrown) {
             // your error code
@@ -163,7 +164,7 @@ function locateCountry(countryCode) {
   countryCodeGlobal = countryCode;
   getCountryBorder(countryCode);
   getCountryInfo(countryCode);
-  getNews();
+  
 }
 
 //get nearby cities and put markers
@@ -219,10 +220,9 @@ function getNearbyWikis(east, west, north, south) {
       west: west,
       north: north,
       south: south,
-      username: "harmelikyan",
     },
     success: function (json) {
-      json = JSON.stringify(json);
+      // json = JSON.stringify(json);
       console.log(json);
       const data = json.geonames;
       const wiki_icon = L.ExtraMarkers.icon({
@@ -231,8 +231,8 @@ function getNearbyWikis(east, west, north, south) {
         shape: 'circle',
         prefix: 'fas'
       });
-      for (let i = 0; i < data.length; i++) {
-        const marker = L.marker([data[i].lat, data[i].lng], {
+      for (let i = 0; i < json.data.length; i++) {
+        const marker = L.marker([json.data[i].lat, data[i].lng], {
           icon: wiki_icon,
         }).bindPopup(
           "<img src='" +
@@ -257,8 +257,9 @@ function getCountryInfo(countryCode) {
   $.ajax({
     url: "php/getCountryInfo.php",
     type: "GET",
+    datatype: 'json',
     data: {
-      countryCodeGlobal: countryCodeGlobal
+      countryCodeGlobal: country_code
     },
     success: function(response) {
       // let info = JSON.stringify(response);
@@ -317,10 +318,11 @@ function getNews() {
       type: "GET",
       datatype: 'json',
       data: {
-        countryCodeGlobal: countryCodeGlobal,
+        countryCodeGlobal: countryName,
       },
         success: function (json) {        
         console.log(json);
+        //const info = json["articles"];
         for (let i = 0; i < json.data.length; i++) {
           $("#news").append(newsCard(json.data[i]));  
         }
