@@ -6,8 +6,7 @@ error_reporting(E_ALL);
 //runtime
 $executionStartTime = microtime(true);
 //api path
-$countryCodeGlobal = $_GET['countryCodeGlobal'];
-$url= 'http://api.countrylayer.com/v2/all?$countryCodeGlobal&access_key=994b4e1616acac3295a4d55ba4d78485';
+$url= 'http://api.countrylayer.com/v2/all?' . $_REQUEST['countryCodeGlobal'] . '&access_key=994b4e1616acac3295a4d55ba4d78485';
 
 
 
