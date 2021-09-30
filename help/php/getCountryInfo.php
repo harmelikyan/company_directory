@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 //runtime
 $executionStartTime = microtime(true);
 //api path
-$url= 'https://restcountries.eu/rest/v3/alpha/' . $_REQUEST['countryCodeGlobal'];
+$url= 'https://api.countrylayer.com/v2/all?' . $_REQUEST['countryCodeGlobal'] . '&access_key = 994b4e1616acac3295a4d55ba4d78485';
 
 
 
