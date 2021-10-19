@@ -6,8 +6,6 @@ error_reporting(E_ALL);
 //runtime
 $executionStartTime = microtime(true);
 //api path
-$lat = $_GET['lat'];
-$lng = $_GET['lng'];
 $url= 'https://api.openweathermap.org/data/2.5/onecall?units=metric&lat=' . $_REQUEST['lat'] . 'lng' . $_REQUEST['lng'] . '&exclude=minutely,hourly,alerts&APPID=04504a1938ffdb3d3aac4fcbd978f355';
 
 
