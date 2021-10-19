@@ -6,8 +6,8 @@ error_reporting(E_ALL);
 //runtime
 $executionStartTime = microtime(true);
 //api path
-// $url= 'https://api.openweathermap.org/data/2.5/onecall?units=metric&lat=' . $_REQUEST['lat']  . $_REQUEST['lng'] .  '&exclude=minutely,hourly,alerts&APPID=04504a1938ffdb3d3aac4fcbd978f355';
-$url = 'https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&exclude=hourly,daily&appid=04504a1938ffdb3d3aac4fcbd978f355';
+$url= 'https://api.openweathermap.org/data/2.5/onecall?units=metric&lat=' . $_REQUEST['lat']  . $_REQUEST['lng'] .  '&exclude=minutely,hourly,alerts&APPID=04504a1938ffdb3d3aac4fcbd978f355';
+
 
 //curl initialize
 $ch = curl_init();
