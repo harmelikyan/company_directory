@@ -45,7 +45,6 @@ map.addLayer(wikiMarker);
 
  getCountry();
  getUserLocation();
- getWeatherData();
 });
 
 // // countryName
@@ -272,6 +271,7 @@ function getCountryInfo(countryCode) {
               "https://en.wikipedia.org/wiki/" + response['data'].name
               );
                getExchangeRates(response['data'].currencies[0].code);
+               getWeatherData();
                
 
     }
