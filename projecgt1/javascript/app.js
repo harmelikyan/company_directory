@@ -6,7 +6,8 @@ $(window).on('load', function() {
     });
   }
 });
-
+var currencies;
+var countryName;
 var countryCodeGlobal = "";
 var lat;
 var lng;
@@ -14,8 +15,16 @@ var countryBoundary;
 var map;
 var citiesMarker;
 var wikiMarker;
+var country_code;
+var symbol;
+var countryName2;
+
 
 $(document).ready(function () {
+  $("#countries").change(function(){
+    locateCountry($(this).val());
+  });
+
 map = L.map("issMap", {
   attributionControl: false,
 }).setView([0, 0], 1.5);
@@ -36,63 +45,18 @@ map.addLayer(wikiMarker);
 
  getCountry();
  getUserLocation();
-
 });
 
-
-
-$("#weather").click(function() {
-  if($("#countries").val() === "") {
-    $("#weather-table").hide();
-  } 
-  else {
-  $("#weather-table").show();
-  }
-})
-
-$("#closeButton").click(function() {
-  $("#weather-table").hide();
-})
-
-$(function() {
-  $("#down").click(function() {
-    if($("#up").css("display") === "none") {
-      $("#up").css("display", "block");
-      $("#down").hide();
-      $(".table-close").fadeOut();
-    } else {
-      $("#up").hide();
-    }
-  })
-})
-
-$(function() {
-  $("#up").click(function() {
-    if($("#down").css("display") === "none") {
-      $("#down").css("display", "block");
-      $("#up").hide();
-      $(".table-close").show();
-    } else {
-      $("#down").hide();
-    }
-  })
-})
-
-
-
-
-// countryName
+// // countryName
 function getCountry() {
   $.ajax({
     url: 'php/getCountriesCode.php',
     type: 'GET',
     dataType: 'json',
-    
     success: function(result) {
       // console.log(result)
-
       for(var country of result) {
-       var countNames =  $('#countries').append(`<option value="${country["iso_a2"]}">${country["name"]}</option>`);
+        countryName =  $('#countries').append(`<option value="${country["iso_a2"]}">${country["name"]}</option>`);
       }
     },
     error: function(jqXHR, textStatus, errorThrown) {
@@ -102,9 +66,8 @@ function getCountry() {
   })
 }
 
-
 function getUserLocation() {
-  console.log("inside get user location");
+  console.log("Getting user location");
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       function (position) {
@@ -115,6 +78,7 @@ function getUserLocation() {
           longitude
         } = position.coords;
         const coords = [latitude, longitude];
+        // console.log(position);
         $.ajax({
           url: "php/getLatLong.php?lat=" +
             latitude +
@@ -123,9 +87,10 @@ function getUserLocation() {
             "&username=harmelikyan",
           type: "GET",
           success: function (json) {
-            console.log("json: ", json);
-            json = JSON.parse(json); 
-            const country_code = json.countryCode;
+            let info = JSON.stringify(json)
+            // console.log("json: ", json["data"]);
+            // 
+             country_code = json["data"].countryCode;
             $("#countries").val(country_code.toUpperCase()).change();
           },
           error: function(jqXHR, textStatus, errorThrown) {
@@ -139,7 +104,7 @@ function getUserLocation() {
 }
 
 
-  //country border
+//   //country border
   function getCountryBorder(countryCode) {
     $.ajax({
       url: 'php/getCountryBorders.php',
@@ -147,16 +112,14 @@ function getUserLocation() {
       dataType: 'json', 
       data: {
           countryCode: $('#countries').val(),
-
       },
       
       success: function(json) {
-        console.log(JSON.stringify(json))
+        // console.log(JSON.stringify(json))
         countryBoundary.clearLayers();
         countryBoundary.addData(json).setStyle(countryStyle());
         const bounds = countryBoundary.getBounds();
         map.fitBounds(bounds);
-
 
         const east = bounds.getEast();
         const west = bounds.getWest();
@@ -165,6 +128,7 @@ function getUserLocation() {
         ;
         getNearbyCities(east, west, north, south);
         getNearbyWikis(east, west, north, south);
+        
 
  },
 
@@ -181,18 +145,17 @@ function countryStyle() {
   return {
     fillColor: "blue",
     weight: 2,
-    fillOpacity: 0.6,
-
+    fillOpacity: 0.2,
   }
 }
 
-
 function locateCountry(countryCode) {
   if (countryCode == "") return;
-  country_name = $("#country option:selected").text();
+  countryName = $("#country option:selected").text();
   countryCodeGlobal = countryCode;
   getCountryBorder(countryCode);
   getCountryInfo(countryCode);
+  
 }
 
 //get nearby cities and put markers
@@ -209,24 +172,24 @@ function getNearbyCities(east, west, north, south) {
       username: "harmelikyan",
     },
     success: function (json) {
-      json = JSON.parse(json);
-      console.log(json);
-      const data = json.geonames;
+      // json = JSON.stringify(json);
+      // console.log(json);
+      // const data = json.geonames;
       const city_icon = L.ExtraMarkers.icon({
-        icon: 'fa-coffee',
+        icon: "fa-building",
         markerColor: 'red',
         shape: 'circle',
         prefix: 'fa'
       });
 
-      for (let i = 0; i < data.length; i++) {
-        const marker = L.marker([data[i].lat, data[i].lng], {
+      for (let i = 0; i < json.data.length; i++) {
+        const marker = L.marker([json.data[i].lat, json.data[i].lng], {
           icon: city_icon,
         }).bindPopup(
           "<b>" +
-          data[i].name +
+          json.data[i].name +
           "</b><br>Population: " +
-          parseInt(data[i].population).toLocaleString("en")
+          parseInt(json.data[i].population).toLocaleString("en")
           
         );
         
@@ -237,7 +200,7 @@ function getNearbyCities(east, west, north, south) {
   });
 }
 
-//get nearby wikipedias
+// //get nearby wikipedias
 function getNearbyWikis(east, west, north, south) {
   wikiMarker.clearLayers();
   $.ajax({
@@ -248,25 +211,29 @@ function getNearbyWikis(east, west, north, south) {
       west: west,
       north: north,
       south: south,
-      username: "harmelikyan",
     },
     success: function (json) {
-      json = JSON.parse(json);
-      console.log(json);
-      const data = json.geonames;
+      // json = JSON.stringify(json);
+      // console.log(json);
+      // const data = json.geonames;
       const wiki_icon = L.ExtraMarkers.icon({
-        icon: 'fa-coffee',
+        icon: 'fa-info',
         markerColor: 'blue',
         shape: 'circle',
-        prefix: 'fa'
+        prefix: 'fas'
       });
-      for (let i = 0; i < data.length; i++) {
-        const marker = L.marker([data[i].lat, data[i].lng], {
+      for (let i = 0; i < json.data.length; i++) {
+        const marker = L.marker([json.data[i].lat, json.data[i].lng], {
           icon: wiki_icon,
         }).bindPopup(
-          data[i].title +
+          "<img src='" +
+          json.data[i].thumbnailImg +
+          "' width='100px' height='100px' alt='" +
+          json.data[i].title +
+          "'><br><b>" +
+          json.data[i].title +
           "</b><br><a href='https://" +
-          data[i].wikipediaUrl +
+          json.data[i].wikipediaUrl +
           "' target='_blank'>Wikipedia Link</a>"
         );
         wikiMarker.addLayer(marker);
@@ -276,38 +243,42 @@ function getNearbyWikis(east, west, north, south) {
 }
 
 
-//get country info
+// //get country info
 function getCountryInfo(countryCode) {
-
   $.ajax({
     url: "php/getCountryInfo.php",
     type: "GET",
+    datatype: 'json',
     data: {
-      country_code: countryCode
+      countryCodeGlobal: countryCode
     },
-    success: function (response) {
-      let info = JSON.parse(response);
-      console.log(info);
-      lat = info.latlng[0];
-      lng = info.latlng[1];
-            $("#country_capital").html(info.capital);
-            $("#country_population").html(info.population);
-            $("#country_flag").attr("src", info.flag);
-            $("#country_currency").html(info.currencies[0]["name"]);
-            $("#region").html(info.region);
-            $("#timeZone").html(info.timezones);
+    success: function(response) {
+      // let info = JSON.stringify(response);
+      // console.log(response);
+            lat = response['data'].latlng[0];
+            lng = response['data'].latlng[1];
+            countryName2 = $("#countryInfo").html(response['data'].name)
+            symbol = response['data'].currencies[0].symbol;
+            currencies = $("#currency").html(symbol +  " " + response['data'].currencies[0].name);
+            $("#country_capital").html(response['data'].capital);
+            $("#country_population").html(parseInt(response['data'].population).toLocaleString("en"));
+            $("#country_flag").attr("src", response['data'].flag);
+            $("#area").html(response['data'].nativeName);
+            $("#region").html(response['data'].region);
+            $("#timeZone").html(response['data'].timezones);
             $("#countryWikipedia").attr(
               "href",
-              "https://en.wikipedia.org/wiki/" + info.name
-            );
-    },
-  });
+              "https://en.wikipedia.org/wiki/" + response['data'].name
+              );
+               getExchangeRates(response['data'].currencies[0].code);
+
+
+    }
+  })
+
 }
 
-
-    
-
-//Weather data
+// //Weather data
 function getWeatherData() {
   $.ajax({
     url: "php/getWeather.php",
@@ -318,43 +289,129 @@ function getWeatherData() {
       lng: lng
     },
     success: function (response) {
-      let details = JSON.parse(response);
-      console.log(details);
-      $("#first-row").html("Weather for the next Seven Days");
-      $("#second-row").html("Max Temperature");
-      $("#third-row").html("Min Temperature");
+      // let details = JSON.stringify(response);
+      console.log(response);
+      $("#first-row").html("");
+      $("#second-row").html("");
+      $("#third-row").html("");
       const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-      for (let i = 0; i < 7; i++) {
-        const d = details["daily"][i];
+      for (let i = 0; i < 5; i++) {
+        const d = response["daily"][i];
         const day = days[new Date(d["dt"] * 1000).getDay()];
+      
+        
         $("#first-row").append("<td>" + day + "</td>");
         $("#second-row").append("<td>" + parseInt(d["temp"]["max"]) + "°</td>");
         $("#third-row").append("<td>" + parseInt(d["temp"]["min"]) + "°</td>");
-        const wiki_icon = L.ExtraMarkers.icon({
-          icon: 'fa-coffee',
-          markerColor: 'blue',
-          shape: 'circle',
-          prefix: 'fa'
-        });
-        for (let i = 0; i < data.length; i++) {
-          const marker = L.marker([data[i].lat, data[i].lng], {
-            icon: wiki_icon,
-          }).bindPopup(
-            data[i].title +
-            "</b><br><a href='https://" +
-            data[i].wikipediaUrl +
-            "' target='_blank'>Wikipedia Link</a>"
-          );
-          wikiMarker.addLayer(marker);
-        }
       }
     },
+    error: function(jqXHR, textStatus, errorThrown) {
+      // your error code
+      console.log(jqXHR);
+    } 
   });
 }
 
 
 
+$("#newsImg").click(
+function getNews() {
+    $("#news").html("");
+    $.ajax({
+      url: "php/getNews.php",
+      type: "GET",
+      datatype: 'json',
+      data: {
+        countryCodeGlobal: countryCodeGlobal,
+      },
+        success: function (json) {        
+        // console.log(json);
+        for (let i = 0; i < json.data.length; i++) {
+          $("#news").append(newsCard(json.data[i]));  
+          $("#countryname3").html(countryName2);
+        }
+      },
+  
+      error: function(jqXHR, textStatus, errorThrown) {
+  
+        // your error code
+  
+        console.log(jqXHR);
+  
+      } 
+  
+    });
+  
+  }
+
+)
 
 
+function newsCard(data) {
+  const card =
+    '<div class="card" style= display: inline"> <img class="card-img-top" src="' +
+    data["urlToImage"] +
+    '" alt="News Image"> <div class="card-body"> <h5 class="card-title">' +
+    data["author"] +
+    '</h5> <p class="card-text">' +
+    data["title"] +
+    '</p> <a href="' +
+    data["url"] +
+    '" target="_blank" class="btn btn-primary">See More</a> </div> </div>';
+  return card;
+}
+
+$("#covidImg").click(
+  function covidData() {
+  $.ajax({
+    url: "php/covid.php",
+    type: "GET",
+    datatype: "json",
+    data: {
+      countryName: countryCodeGlobal
+    },
+    success: function(result) {
+      let info = JSON.stringify(result);
+      // console.log(info);
+      $("#cases").html(result['data'].cases);
+      $("#todayCases").html(result['data'].todayCases);
+      $("#deaths").html(result['data'].deaths);
+      $("#todayDeaths").html(result['data'].todayDeaths);
+      $("#recovered").html(result['data'].recovered);
+      $("#countryName2").html(result['data'].country)
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      // your error code
+      console.log(jqXHR);
+    } 
+  })
+}
+)
+
+//Exchange rates
+function getExchangeRates(currencies) {
+  $.ajax({
+    url: "php/getExchange.php",
+    type: "GET",
+    datatype: "json",
+    data: {
+      code: currencies
+    },
+    success: function(response) {
+      // console.log(response)
+      $("#exchangeRates").html(symbol + response['data'].rates[currencies] + " " + "= $1")
+      
+      }
+  })
+}
+
+
+$("#exchangeImg").click(
+  getExchangeRates()
+);
+
+$("#weatherImg").click(
+  getWeatherData()
+);
 
 
