@@ -255,8 +255,8 @@ function getCountryInfo(countryCode) {
     success: function(response) {
       // let info = JSON.stringify(response);
       // console.log(response);
-            // lat = info.latlng[0];
-            // lng = info.latlng[1];
+            lat = response['data'].latlng[0];
+            lng = response['data'].latlng[1];
             countryName2 = $("#countryInfo").html(response['data'].name)
             symbol = response['data'].currencies[0].symbol;
             currencies = $("#currency").html(symbol +  " " + response['data'].currencies[0].name);
@@ -271,8 +271,7 @@ function getCountryInfo(countryCode) {
               "https://en.wikipedia.org/wiki/" + response['data'].name
               );
                getExchangeRates(response['data'].currencies[0].code);
-               getWeatherData();
-               
+
 
     }
   })
@@ -290,20 +289,26 @@ function getWeatherData() {
       lng: lng
     },
     success: function (response) {
-      // let details = JSON.parse(response);
+      // let details = JSON.stringify(response);
       console.log(response);
       $("#first-row").html("");
       $("#second-row").html("");
       $("#third-row").html("");
       const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
       for (let i = 0; i < 5; i++) {
-        const d = details["daily"][i];
+        const d = response["daily"][i];
         const day = days[new Date(d["dt"] * 1000).getDay()];
+      
+        
         $("#first-row").append("<td>" + day + "</td>");
         $("#second-row").append("<td>" + parseInt(d["temp"]["max"]) + "°</td>");
         $("#third-row").append("<td>" + parseInt(d["temp"]["min"]) + "°</td>");
       }
     },
+    error: function(jqXHR, textStatus, errorThrown) {
+      // your error code
+      console.log(jqXHR);
+    } 
   });
 }
 
