@@ -407,11 +407,11 @@ function getExchangeRates(currencies) {
 
 
 $("#exchangeImg").click(
-  getExchangeRates()
+  getExchangeRates
 );
 
 $("#weatherImg").click(
-  getWeatherData()
+  getWeatherData
 );
 
 
