@@ -18,6 +18,11 @@ var wikiMarker;
 var country_code;
 var symbol;
 var countryName2;
+let lati;
+let longi;
+
+
+
 
 
 $(document).ready(function () {
@@ -74,9 +79,11 @@ function getUserLocation() {
         const {
           latitude
         } = position.coords;
-        const {
+         const {
           longitude
         } = position.coords;
+        
+        
         const coords = [latitude, longitude];
         // console.log(position);
         $.ajax({
@@ -180,8 +187,11 @@ function getNearbyCities(east, west, north, south) {
         markerColor: 'red',
         shape: 'circle',
         prefix: 'fa'
+        
       });
-
+       lati = json.data[0].lat
+       longi = json.data[0].lng
+      getWeatherData(lati, longi)
       for (let i = 0; i < json.data.length; i++) {
         const marker = L.marker([json.data[i].lat, json.data[i].lng], {
           icon: city_icon,
@@ -279,14 +289,14 @@ function getCountryInfo(countryCode) {
 }
 
 // //Weather data
-function getWeatherData() {
+function getWeatherData(lati, longi) {
   $.ajax({
     url: "php/getWeather.php",
     type: "GET",
     datatype: 'json',
     data: {
-      lat: lat,
-      lng: lng
+      lat: lati,
+      lng: longi
     },
     success: function (response) {
       // let details = JSON.stringify(response);
@@ -294,15 +304,17 @@ function getWeatherData() {
       $("#first-row").html("");
       $("#second-row").html("");
       $("#third-row").html("");
-      const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
       for (let i = 0; i < 5; i++) {
-        const d = response["daily"][i];
-        const day = days[new Date(d["dt"] * 1000).getDay()];
+        const d = response.data.daily[i];
+        const day = days[new Date(d.dt * 1000).getDay()];
       
         
         $("#first-row").append("<td>" + day + "</td>");
         $("#second-row").append("<td>" + parseInt(d["temp"]["max"]) + "°</td>");
         $("#third-row").append("<td>" + parseInt(d["temp"]["min"]) + "°</td>");
+        // $("clouds").html(d[])
+        $("#countrysName").html(countryName2);
       }
     },
     error: function(jqXHR, textStatus, errorThrown) {
@@ -407,7 +419,7 @@ function getExchangeRates(currencies) {
 
 
 $("#exchangeImg").click(
-  getExchangeRates()
+  getExchangeRates
 );
 
 $("#weatherImg").click(
