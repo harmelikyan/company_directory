@@ -6,13 +6,11 @@ error_reporting(E_ALL);
 //runtime
 $executionStartTime = microtime(true);
 //api path
-$current_date = date("Y-m-d");
-$url = 'http://newsapi.org/v2/everything?q=' . $_REQUEST['countryCodeGlobal'] . '&from=' . $current_date . '&sortBy=relevancy&language=en&apiKey=c196d2e348644b668ecfe80c1af6e7a8';
+// $url = 'https://restcountries.com/v2/alpha/' . $_REQUEST['countryCodeGlobal'];
+$url = 'https://restcountries.com/v3.1/alpha/' . $_REQUEST['countryCodeGlobal'];
 
-//curl initialize
+
 $ch = curl_init();
-//curl constants
-//verify the peer's SSL certificate
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 //Set an option for a cURL transfer
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -32,7 +30,7 @@ $decode = json_decode($result, true);
 	$output['status']['name'] = "ok";
 	$output['status']['description'] = "success";
 	$output['status']['returnedIn'] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
-	$output['data'] = $decode['articles'];
+	$output['data'] = $decode;
 
     header('Content-Type: application/json; charset=UTF-8');
 
@@ -41,11 +39,3 @@ $decode = json_decode($result, true);
 echo json_encode($output);
 
 ?>
-
-
-
-
-
-
-
-

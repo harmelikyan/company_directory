@@ -1,46 +1,35 @@
 //preloader
-// $(window).on('load', function() {
-//   if ($('#preloader').length) {
-//     $('#preloader').delay(1000).fadeOut('slow', function() {
-//       $(this).remove();
-//     });
-//   }
-// });
+$(window).on('load', function() {
+  if ($('#preloader').length) {
+    $('#preloader').delay(3000).fadeOut('slow', function() {
+      $(this).remove();
+    });
+  }
+});
 var currencies;
 var countryName;
 var countryCodeGlobal = "";
-var lat;
-var lng;
 var countryBoundary;
 var map;
 var citiesMarker;
 var wikiMarker;
 var country_code;
 var symbol;
-var countryName2;
 let lati;
 let longi;
 let alpha2Code;
-let countryCovidName;
 let  cloack;
+let names;
 
-
-
-$(document).ready(function(){
-  $(window).on('load', function() {
-    if ($('#preloader').length) {
-      $('#preloader').delay(3000).fadeOut('slow', function() {
-        $(this).remove();
-      });
-    }
-  });
-  $("#infoModal").modal('show');
-});
 
 $(document).ready(function () {
   $("#countries").change(function(){
     locateCountry($(this).val());
   });
+
+  $(document).ready(function() {
+    $('.js-example-basic-single').select2();
+});
 
 map = L.map("issMap", {
   attributionControl: false,
@@ -174,6 +163,7 @@ function locateCountry(countryCode) {
   countryCodeGlobal = countryCode;
   getCountryBorder(countryCode);
   getCountryInfo(countryCode);
+  getCoat(countryCode);
   
 }
 
@@ -276,11 +266,11 @@ function getCountryInfo(countryCode) {
     success: function(response) {
       // let info = JSON.stringify(response);
             // console.log(response);
-            lat = response['data'].latlng[0];
-            lng = response['data'].latlng[1];
+            // lat = response['data'].latlng[0];
+            // lng = response['data'].latlng[1];
             alpha2Code =  response['data'].alpha2Code;
-            countryName2 = response['data'].name;
-            $("#countryInfo").html(response['data'].altSpellings[2])
+            names = response['data'].altSpellings[2];
+             $("#countryInfo").html(response['data'].altSpellings[2])
             symbol = response['data'].currencies[0].symbol;
             currencies = $("#currency").html(symbol +  " " + response['data'].currencies[0].name);
             $("#country_capital").html(response['data'].capital);
@@ -291,7 +281,6 @@ function getCountryInfo(countryCode) {
             $("#timeZone").html(response['data'].timezones);
             $("#language").html(response['data'].languages[0].name);
             $("#area").html(parseInt(response['data'].area).toLocaleString("en"));
-            $("#cloack").html(cloack);
            
             $("#countryWikipedia").attr(
               "href",
@@ -306,6 +295,25 @@ function getCountryInfo(countryCode) {
 
 }
 
+
+//coat of arms
+function getCoat(countryCode) {
+  $.ajax({
+    url: "php/coatOfArms.php",
+    type: "GET",
+    datatype: 'json',
+    data: {
+      countryCodeGlobal: countryCode
+    },
+    success: function(response) {
+      // let info = JSON.stringify(response);
+            // console.log(info);
+          $('#coat').attr("src", response['data'][0].coatOfArms.png);
+    }
+  })
+}
+
+
 // //Weather data
 function getWeatherData(latitude, longitude) {
   $.ajax({
@@ -318,7 +326,7 @@ function getWeatherData(latitude, longitude) {
     },
     success: function (response) {
       // let details = JSON.stringify(response);
-      console.log(response);
+      // console.log(response);
       $("#first-row").html("");
       $("#second-row").html("");
       $("#third-row").html("");
@@ -330,10 +338,9 @@ function getWeatherData(latitude, longitude) {
         
         $("#first-row").append("<td>" + day + "</td>");
         $("#second-row").append("<td>" + parseInt(d["temp"]["max"]) + "°</td>");
-        $("#third-row").append("<td>" + parseInt(d["temp"]["min"]) + "°</td>");
         $("#clouds").html(response.data.current.weather[0].description)
         $("#currentTemp").html(response.data.current.temp + "°");
-        $("#countrysName").html(countryName2);
+        $("#countrysName").html(names);
         $("#weatherInfo").html(response.data.current.weather[0].description);
         $("#wind_speed").html(response.data.current.wind_speed + " m/s");
         $("#humidity").html(response.data.current.humidity);
@@ -354,24 +361,21 @@ function getWeatherData(latitude, longitude) {
 
 
 
-$("#newsImg").click(
+
 function getNews() {
     $("#news").html("");
     $.ajax({
       url: "php/getNews.php",
       type: "GET",
       datatype: 'json',
-      data: {
-        
-        countryCodeGlobal: alpha2Code,
-       
+      data: {   
+        countryCodeGlobal: countryCodeGlobal,
       },
         success: function (json) {        
-        // console.log(json);
+        console.log(json);
         for (let i = 0; i < json.data.length; i++) {
           $("#news").append(newsCard(json.data[i]));  
-          $("#countryname3").html(countryName2);
-       
+          $("#countryname3").html(names);
         }
       },
   
@@ -386,9 +390,6 @@ function getNews() {
     });
   
   }
-
-)
-
 
 function newsCard(data) {
   const card =
@@ -422,7 +423,7 @@ function newsCard(data) {
       $("#deaths").html(parseInt(result['data'].deaths).toLocaleString("en"));
       $("#todayDeaths").html(parseInt(result['data'].todayDeaths).toLocaleString("en"));
       $("#recovered").html(parseInt(result['data'].recovered).toLocaleString("en"));
-      countryCovidName = $("#countryName2").html(result['data'].country);
+      $("#countryName2").html(names);
       $("#todayRecovered").html(parseInt(result['data'].todayRecovered).toLocaleString("en"));
     },
     error: function(jqXHR, textStatus, errorThrown) {
@@ -461,18 +462,18 @@ function getNationalHoliday(alpha2Code) {
     success: function(response) {
       // console.log(response)
       $("#holiday").html(response['data'].response.holidays[0].name);
-      $("#countryNamee").html(response['data'].response.holidays[0].country.name);
-      $("#holidayDate").html(response['data'].response.holidays[0].date.iso);
+      $("#countryNamee").html(names);
+      $("#holidayDate").html(moment(response['data'].response.holidays[0].date.iso).format('MMMM Do'));
       $("#holiday2").html(response['data'].response.holidays[4].name)
-      $("#holidayDate2").html(response['data'].response.holidays[4].date.iso)
+      $("#holidayDate2").html(moment(response['data'].response.holidays[4].date.iso).format('MMMM Do'))
       $("#holiday3").html(response['data'].response.holidays[7].name)
-      $("#holidayDate3").html(response['data'].response.holidays[7].date.iso)
+      $("#holidayDate3").html(moment(response['data'].response.holidays[7].date.iso).format('MMMM Do'))
       $("#holiday4").html(response['data'].response.holidays[9].name)
-      $("#holidayDate4").html(response['data'].response.holidays[9].date.iso)
+      $("#holidayDate4").html(moment(response['data'].response.holidays[9].date.iso).format('MMMM Do'))
       $("#holiday5").html(response['data'].response.holidays[10].name)
-      $("#holidayDate5").html(response['data'].response.holidays[10].date.iso)
+      $("#holidayDate5").html(moment(response['data'].response.holidays[10].date.iso).format('MMMM Do'))
       $("#holiday6").html(response['data'].response.holidays[29].name)
-      $("#holidayDate6").html(response['data'].response.holidays[29].date.iso)
+      $("#holidayDate6").html(moment(response['data'].response.holidays[29].date.iso).format('MMMM Do'))
     },
     error: function(jqXHR, textStatus, errorThrown) {
       // your error code
@@ -491,10 +492,10 @@ function getCloack(lati, longi) {
       lng: longi
     },
     success: function(json) {
-      console.log(json)
-        $("#cloack").html(json.data.time);
-        $("#sunrise").html(json.data.sunrise)
-        $("#sunset").html(json.data.sunset)
+      // console.log(json)
+        const dates = $("#cloack").html(moment(json.data.time).format('LT'));
+        $("#sunrise").html(moment(json.data.sunrise).format('LT'))
+        $("#sunset").html(moment(json.data.sunset).format('LT'))
         $("#uvi").html(json.data.uvi)
     },
     error: function(jqXHR, textStatus, errorThrown) {
@@ -516,4 +517,8 @@ $("#weatherImg").click(
 
 $("#covidImg").click(
   covidData
+  )
+
+  $("#newsImg").click(
+    getNews
   )

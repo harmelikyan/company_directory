@@ -4,9 +4,10 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>The Map</title>
+        <title>Gazetteer</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <link rel="icon" type="image/png" href="img/globe_color.png">
         <link rel="stylesheet" href="css/styles.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="  crossorigin=""/>
         <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -14,6 +15,7 @@
         <link rel="stylesheet" href="css/leaflet.extra-markers.min.css">
         <link rel="stylesheet" href="css/MarkerCluster.css">
         <link rel="stylesheet" href="css/MarkerCluster.Default.css">
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     </head>
     <body>
         <div id="preloader"></div>
@@ -46,7 +48,7 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h3 class="modal-title">Public Holidays</h3>
+                <h3 class="modal-title" style="margin-left: 60px;">Holidays</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -173,7 +175,7 @@
             <table class="fixed-top">
               <tbody class="table-close">
                     <th class="chooseC"><div class="container">
-                            <select name="countries" id="countries" class="countName" style="width: 200px;">
+                            <select name="countries" id="countries" class="countName form-control js-example-basic-single" style="width: 200px;">
                                 <option value="">Select Country</option>
                             </select>
                         </div>
@@ -196,9 +198,18 @@
                             <td scope="row">Flag</td>
                             <td scope="row"><img src="" style="height: 30px" id="country_flag" /></td>
                         </tr>
+                        <tr> 
+                          <td scope="row">Crest</td>
+                          <td scope="row"><img src="" style="height: 50px;" id="coat" /></td>
+                      </tr>
+                        
                         <tr>
                             <td style="width: 20px">Capital</td>
                             <td id="country_capital"></td>
+                        </tr>
+                        <tr>
+                            <td>Time</td>
+                            <td id="cloack"></td>
                         </tr>
                         <tr>
                             <td>Population</td>
@@ -224,10 +235,6 @@
                         <td>Language</td>
                         <td id="language"></td>
                     </tr>
-                    <tr>
-                      <td>Time</td>
-                      <td id="cloack"></td>
-                  </tr>
                         <tr>
                             <td class="text-dark">Wikipedia</td>
                             <td>
@@ -264,8 +271,6 @@
                     <!--weather-->
                             <div class="modal fade" id="weatherModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                               <div class="modal-dialog" role="document">
-                                <div class="modal-content colorss" style="background-color: #95DAC1;">
-                                  <div class="modal-header" class="weatherCard">
                                   <div class="card">
                                     <h2 id="countrysName" class="text-center"></h2>
                                     <h1 id="currentTemp" class="text-center"></h1>
@@ -296,7 +301,7 @@
                                     </table>
                                     <img src="" alt="" class="weatherIcon" id="cloud2">
                                     <table class="table2 box">
-                                      <thead> 
+                                      <thead>
                                         <tr class="d-flex flex-row">
                                             <th class="weatherRow" id="first-row"></th>
                                         </tr>
@@ -308,20 +313,22 @@
                                       </tbody>
                                     </table>
                                   </div>
-                                  </div>
-                                  </div>
                                 </div>
                               </div>
                             </div>
 
 
+        
 
         <script src="javascript/jquery.js"></script>  
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
         <script src="javascript/leaflet.extra-markers.min.js"></script>
         <script src="javascript/leaflet.markercluster.js"></script>
         <script src="javascript/bootstrap.min.js"></script>
-        <script src="javascript/app.js"></script>
+        <script src="javascript/moment.min.js"></script>
+        <script src="javascript/moment-with-locale.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script type="module" src="javascript/app.js"></script>
    
 
     </body>
