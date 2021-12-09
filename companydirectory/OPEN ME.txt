@@ -1,0 +1,4 @@
+Change the styles in add new location, employee, department: 
+. Title text-center
+. Space in between text and input field
+. Change save to submit and change its color to info
