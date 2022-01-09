@@ -32,6 +32,7 @@
 
 	}	
 
+	// $_REQUEST used for development / debugging. Remember to cange to $_POST for production
 
 	$query = 'INSERT INTO department (name, locationID) VALUES("' . $_REQUEST['newDepartment'] . '",' . $_REQUEST["locationId"] . ')';
 
